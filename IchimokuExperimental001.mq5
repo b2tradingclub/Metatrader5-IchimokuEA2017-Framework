@@ -424,10 +424,10 @@ void OnBookEvent(const string &symbol)
 //+------------------------------------------------------------------+
 
 void uploadNotification(string notification){
-   // "https://ichimoku-ea.000webhostapp.com/?notification=test"
+   // "https://YOURPHPWEBSITEURL.000webhostapp.com/?notification=test"
    string cookie=NULL,headers; 
    char post[],result[]; 
-   string google_url="https://ichimoku-ea.000webhostapp.com/?notification=" + notification; 
+   string google_url="https://YOURPHPWEBSITEURL.000webhostapp.com/?notification=" + notification; 
    int timeout=5000; //--- Timeout below 1000 (1 sec.) is not enough for slow Internet connection 
    int res=WebRequest("GET",google_url,cookie,NULL,timeout,post,0,result,headers); 
    if(res==-1) 
@@ -446,13 +446,13 @@ void uploadNotification(string notification){
 }
 
 void uploadSSBAlert(string timestamp, string period, string name, string type, double price, double ssb){
-   // "https://ichimoku-ea.000webhostapp.com/?notification=test"
+   // "https://YOURPHPWEBSITEURL.000webhostapp.com/?notification=test"
    string cookie=NULL,headers; 
    char post[],result[]; 
    
    string ssbalert = timestamp + ";" + period + ";" + name + ";" + type + ";" + DoubleToString(price) + ";" + DoubleToString(ssb);
    
-   string google_url="https://ichimoku-ea.000webhostapp.com/?upload_ssb_alert=" + ssbalert; 
+   string google_url="https://YOURPHPWEBSITEURL.000webhostapp.com/?upload_ssb_alert=" + ssbalert; 
    int timeout=5000; //--- Timeout below 1000 (1 sec.) is not enough for slow Internet connection 
    int res=WebRequest("GET",google_url,cookie,NULL,timeout,post,0,result,headers); 
    if(res==-1) 
@@ -472,10 +472,10 @@ void uploadSSBAlert(string timestamp, string period, string name, string type, d
 
 
 void resetAllRemoteData(){
-   // "https://ichimoku-ea.000webhostapp.com/?notification=test"
+   // "https://YOURPHPWEBSITEURL.000webhostapp.com/?notification=test"
    string cookie=NULL,headers; 
    char post[],result[]; 
-   string google_url="https://ichimoku-ea.000webhostapp.com/?reset_all=true"; 
+   string google_url="https://YOURPHPWEBSITEURL.000webhostapp.com/?reset_all=true"; 
    int timeout=5000; //--- Timeout below 1000 (1 sec.) is not enough for slow Internet connection 
    int res=WebRequest("GET",google_url,cookie,NULL,timeout,post,0,result,headers); 
    if(res==-1) 
@@ -494,10 +494,10 @@ void resetAllRemoteData(){
 }
 
 void resetNotificationsRemoteData(){
-   // "https://ichimoku-ea.000webhostapp.com/?notification=test"
+   // "https://YOURPHPWEBSITEURL.000webhostapp.com/?notification=test"
    string cookie=NULL,headers; 
    char post[],result[]; 
-   string google_url="https://ichimoku-ea.000webhostapp.com/?reset_notifications=true"; 
+   string google_url="https://YOURPHPWEBSITEURL.000webhostapp.com/?reset_notifications=true"; 
    int timeout=5000; //--- Timeout below 1000 (1 sec.) is not enough for slow Internet connection 
    int res=WebRequest("GET",google_url,cookie,NULL,timeout,post,0,result,headers); 
    if(res==-1) 
@@ -516,10 +516,10 @@ void resetNotificationsRemoteData(){
 }
 
 void resetSSBAlertsRemoteData(){
-   // "https://ichimoku-ea.000webhostapp.com/?notification=test"
+   // "https://YOURPHPWEBSITEURL.000webhostapp.com/?notification=test"
    string cookie=NULL,headers; 
    char post[],result[]; 
-   string google_url="https://ichimoku-ea.000webhostapp.com/?reset_ssb_alerts=true"; 
+   string google_url="https://YOURPHPWEBSITEURL.000webhostapp.com/?reset_ssb_alerts=true"; 
    int timeout=5000; //--- Timeout below 1000 (1 sec.) is not enough for slow Internet connection 
    int res=WebRequest("GET",google_url,cookie,NULL,timeout,post,0,result,headers); 
    if(res==-1) 
