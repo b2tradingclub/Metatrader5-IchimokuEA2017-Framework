@@ -1,7 +1,7 @@
 <?php
 define("MYSQL_SERVER", "localhost");
 define("MYSQL_USER", "id517966_ichimoku");
-define("MYSQL_PASSWORD", "Paris75#");
+define("MYSQL_PASSWORD", "");
 define("MYSQL_DB", "id517966_ichimoku");
 define("MAIN_TABLE_NAME","notification");
 define("CREATE_DB_IF_NOT_EXISTS", false);
