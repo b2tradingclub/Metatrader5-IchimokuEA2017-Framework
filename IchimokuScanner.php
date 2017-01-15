@@ -62,11 +62,12 @@ if (LOG_IP==true){
 	$db->close();
 }
 
-if (isset($_GET['view_logs'])) {	
+if (isset($_GET['view_logs'])) {		
 	echo "<html><head><style>table, th, td { border: 1px solid black; border-collapse: collapse; } ";
 	echo "th, td { padding: 5px; text-align: left; } </style><title></title></head><body>";
 	echo "<h2>Ichimoku Scanner</h2>";
 	echo "<h3>Experimental version</h3><a href='http://traderetgagner.blogspot.com'>traderetgagner.blogspot.com</a><br/>";
+	echo "<br/>";
 	
 	$db = new mysqli(MYSQL_SERVER, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
 	if ($db->connect_errno) {
@@ -83,7 +84,7 @@ if (isset($_GET['view_logs'])) {
 			$nslookup = $row["nslookup"];
 			$url = $row["url"];
 			$count = $row["count"];
-			echo "<td>" . $access_date_time . "</td><td>" . $ip_address . "</td><td>" . $nslookup . "</td><td>"  . $url . "</td><td>" . $count . "</td><br/>";
+			echo "<td>" . $access_date_time . "</td><td>" . $ip_address . "</td><td>" . $nslookup . "</td><td>"  . $url . "</td><td>" . $count . "</td>";
 			echo "</tr>";
 		}
 		echo "</table>";
