@@ -1,11 +1,12 @@
 <?php
 define("MYSQL_SERVER", "localhost");
 define("MYSQL_USER", "id517966_ichimoku");
-define("MYSQL_PASSWORD", "");
+define("MYSQL_PASSWORD", "Paris75#");
 define("MYSQL_DB", "id517966_ichimoku");
 define("MAIN_TABLE_NAME","notification");
-define("CREATE_DB_IF_NOT_EXISTS", false);
-define("CREATE_TABLES_IF_NOT_EXIST", false);
+define("CREATE_DB_IF_NOT_EXISTS", true);
+define("CREATE_TABLES_IF_NOT_EXIST", true);
+define("LOG_IP", true);
 
 // si le paramètre CREATE_DB_IF_NOT_EXISTS est défini à true alors tenter de créer la base de données dans paramètre MYSQL_DB
 if (CREATE_DB_IF_NOT_EXISTS == true){
@@ -31,7 +32,68 @@ if (CREATE_TABLES_IF_NOT_EXIST == true){
 	$sql = "CREATE TABLE `ssb_alert` (`timestamp` text COLLATE utf8_unicode_ci NOT NULL, `period` text COLLATE utf8_unicode_ci NOT NULL, `name` text COLLATE utf8_unicode_ci NOT NULL, `type` text COLLATE utf8_unicode_ci NOT NULL, `price` double NOT NULL, `ssb` double NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
 	$r = mysqli_query($db, $sql);
 
+		$sql = "CREATE TABLE `ip_address_log` (`id` bigint(20) NOT NULL AUTO_INCREMENT, `access_date_time` datetime NOT NULL, `ip_address` varchar(32) COLLATE latin1_general_ci NOT NULL, `nslookup` text, `url` varchar(255) COLLATE latin1_general_ci DEFAULT NULL, `count` bigint(20), PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci";
+	$r = mysqli_query($db, $sql);
+	
 	$db->close();
+}
+
+
+// LOG IP si paramètre LOG_IP = true
+if (LOG_IP==true){
+	$db = new mysqli(MYSQL_SERVER, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
+	if ($db->connect_errno) {
+	    exit;
+	}
+	$client_ip = $_SERVER['REMOTE_ADDR'];
+	$nslookup = gethostbyaddr($client_ip);
+	$url = $_SERVER['PHP_SELF'];
+	
+	$r = mysqli_query($db, "SELECT * FROM `ip_address_log` where ip_address = '" . $client_ip . "'");
+	if ($r->num_rows > 0) {
+		if($row = $r->fetch_assoc()) {
+			$count = $row["count"];
+			$r = mysqli_query($db, "update `ip_address_log` set access_date_time = NOW(), count = " . ($count+1) . ", nslookup='" . $nslookup . "', url='" . $url . "' where ip_address = '" . $client_ip . "'");
+		}
+	} else {
+		$r = mysqli_query($db, "insert into ip_address_log(ip_address, access_date_time, nslookup, url, count) values ('" . $client_ip . "',NOW(),'" . $nslookup . "','" . $url . "',1)");
+	}
+		
+	$db->close();
+}
+
+if (isset($_GET['view_logs'])) {	
+	echo "<html><head><style>table, th, td { border: 1px solid black; border-collapse: collapse; } ";
+	echo "th, td { padding: 5px; text-align: left; } </style><title></title></head><body>";
+	echo "<h2>Ichimoku Scanner</h2>";
+	echo "<h3>Experimental version</h3><a href='http://traderetgagner.blogspot.com'>traderetgagner.blogspot.com</a><br/>";
+	
+	$db = new mysqli(MYSQL_SERVER, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
+	if ($db->connect_errno) {
+	    exit;
+	}
+	
+	$r = mysqli_query($db, "SELECT * FROM `ip_address_log` order by access_date_time desc");
+	if ($r->num_rows > 0) {
+		echo "<table>";
+		while($row = $r->fetch_assoc()) {
+			echo "<tr>";
+			$access_date_time = $row["access_date_time"];
+			$ip_address = $row["ip_address"];
+			$nslookup = $row["nslookup"];
+			$url = $row["url"];
+			$count = $row["count"];
+			echo "<td>" . $access_date_time . "</td><td>" . $ip_address . "</td><td>" . $nslookup . "</td><td>"  . $url . "</td><td>" . $count . "</td><br/>";
+			echo "</tr>";
+		}
+		echo "</table>";
+	}
+		
+	$db->close();
+	
+	echo "</body></html>";
+
+	exit;
 }
 
 //supprimer tous les messages dans la table des notifications
