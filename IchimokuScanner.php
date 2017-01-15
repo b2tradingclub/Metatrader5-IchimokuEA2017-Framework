@@ -1,12 +1,13 @@
 <?php
 define("MYSQL_SERVER", "localhost");
 define("MYSQL_USER", "id517966_ichimoku");
-define("MYSQL_PASSWORD", "");
+define("MYSQL_PASSWORD", "Paris75#");
 define("MYSQL_DB", "id517966_ichimoku");
 define("MAIN_TABLE_NAME","notification");
 define("CREATE_DB_IF_NOT_EXISTS", true);
 define("CREATE_TABLES_IF_NOT_EXIST", true);
 define("LOG_IP", true);
+define("LOG_IP_IGNORE", "78.201.68.");
 
 // si le paramètre CREATE_DB_IF_NOT_EXISTS est défini à true alors tenter de créer la base de données dans paramètre MYSQL_DB
 if (CREATE_DB_IF_NOT_EXISTS == true){
@@ -58,7 +59,9 @@ if (LOG_IP==true){
 	} else {
 		$r = mysqli_query($db, "insert into ip_address_log(ip_address, access_date_time, nslookup, url, count) values ('" . $client_ip . "',NOW(),'" . $nslookup . "','" . $url . "',1)");
 	}
-		
+	
+	$r = mysqli_query($db, "DELETE FROM `ip_address_log` where ip_address like '%" . LOG_IP_IGNORE . "%'");
+			
 	$db->close();
 }
 
@@ -73,11 +76,9 @@ if (isset($_GET['view_logs'])) {
 	if ($db->connect_errno) {
 	    exit;
 	}
-	
+		
 	$r = mysqli_query($db, "SELECT * FROM `ip_address_log` order by access_date_time desc");
 	if ($r->num_rows > 0) {
-		echo "Number of unique IP addresses = " . $r->num_rows . "<br/>";
-		echo "<br/>";
 		echo "<table>";
 		while($row = $r->fetch_assoc()) {
 			echo "<tr>";
