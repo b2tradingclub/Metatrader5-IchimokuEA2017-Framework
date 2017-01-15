@@ -76,6 +76,8 @@ if (isset($_GET['view_logs'])) {
 	
 	$r = mysqli_query($db, "SELECT * FROM `ip_address_log` order by access_date_time desc");
 	if ($r->num_rows > 0) {
+		echo "Number of unique IP addresses = " . $r->num_rows . "<br/>";
+		echo "<br/>";
 		echo "<table>";
 		while($row = $r->fetch_assoc()) {
 			echo "<tr>";
