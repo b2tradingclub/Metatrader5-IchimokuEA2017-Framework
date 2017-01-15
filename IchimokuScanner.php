@@ -1,11 +1,39 @@
 <?php
-/* This file must be renamed to index.php absolutely for it to receive data from remote Metatrader 5 Platform with IchimokuExperimental001.mq5 */
-/* Developed on 000webhost */
 define("MYSQL_SERVER", "localhost");
 define("MYSQL_USER", "id517966_ichimoku");
-define("MYSQL_PASSWORD", "thepassword");
+define("MYSQL_PASSWORD", "Paris75#");
 define("MYSQL_DB", "id517966_ichimoku");
 define("MAIN_TABLE_NAME","notification");
+define("CREATE_DB_IF_NOT_EXISTS", false);
+define("CREATE_TABLES_IF_NOT_EXIST", false);
+
+// si le paramètre CREATE_DB_IF_NOT_EXISTS est défini à true alors tenter de créer la base de données dans paramètre MYSQL_DB
+if (CREATE_DB_IF_NOT_EXISTS == true){
+	// CREATE DB IF NOT EXISTS
+	$db = new mysqli(MYSQL_SERVER, MYSQL_USER, MYSQL_PASSWORD);
+	if ($db->connect_errno) {
+	    exit;
+	}
+	$r = mysqli_query($db, "create database if not exists " . MYSQL_DB);
+	$db->close();
+}
+
+// si le paramètre existe alors tenter de créer les tables annuaire et ip_address_log
+if (CREATE_TABLES_IF_NOT_EXIST == true){
+	// CREATE TABLE IF NOT EXISTS
+	$db = new mysqli(MYSQL_SERVER, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
+	if ($db->connect_errno) {
+	    exit;
+	}
+	$sql = "CREATE TABLE `notification` (`timestamp` text COLLATE utf8_unicode_ci NOT NULL, `message` text COLLATE utf8_unicode_ci NOT NULL ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+	$r = mysqli_query($db, $sql);
+	
+	$sql = "CREATE TABLE `ssb_alert` (`timestamp` text COLLATE utf8_unicode_ci NOT NULL, `period` text COLLATE utf8_unicode_ci NOT NULL, `name` text COLLATE utf8_unicode_ci NOT NULL, `type` text COLLATE utf8_unicode_ci NOT NULL, `price` double NOT NULL, `ssb` double NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+	$r = mysqli_query($db, $sql);
+
+	$db->close();
+}
+
 //supprimer tous les messages dans la table des notifications
 if (isset($_GET['reset_all'])) {
 	$db = new mysqli(MYSQL_SERVER, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
@@ -38,7 +66,7 @@ if (isset($_GET['reset_ssb_alerts'])) {
 echo "<html><head><style>table, th, td { border: 1px solid black; border-collapse: collapse; } ";
 echo "th, td { padding: 5px; text-align: left; } </style><title></title></head><body>";
 echo "<h2>Ichimoku Scanner</h2>";
-echo "<h3>Experimental version</h3><a href='http://traderetgagner.blogspot.spot'>traderetgagner.blogspot.spot</a><br/>";
+echo "<h3>Experimental version</h3><a href='http://traderetgagner.blogspot.com'>traderetgagner.blogspot.com</a><br/>";
 if (isset($_GET['notification'])) {
 	$notification = $_GET['notification'];
 	echo "received=  [[$notification]]<br/>";
