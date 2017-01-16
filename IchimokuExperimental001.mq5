@@ -45,12 +45,10 @@ int OnInit()
    string output = "";
    output = timestamp + " Starting Ichimoku EA 2017 " + appVersion + " Trader77330@NetCourrier.Com";
    output = output + " Version info : " + versionInfo;
-   output = output + " https://YOURPHPWEBSITEURL.000webhostapp.com/";
+   output = output + " https://ichimoku-ea.000webhostapp.com/";
    printf(output);
    SendNotification(output);
    //resetAllRemoteData();
-   resetNotificationsRemoteData();
-   uploadNotification(output);
    //output = "Version info : " + versionInfo;
    //printf(output);
    //SendNotification(output);
@@ -285,10 +283,9 @@ void Ichimoku()
            }
          if(buy == senkou_span_b_buffer[0])
            {
-            string output = timestamp + " (" + EnumToString(Period()) + ") : " + sname + " BUY == SSB buy = " + DoubleToString(buy) + " ssb =  " + DoubleToString(senkou_span_b_buffer[0]);
+            string output = /*timestamp +*/ " (" + EnumToString(Period()) + ") : " + sname + " BUY == SSB buy = " + DoubleToString(buy) + " ssb =  " + DoubleToString(senkou_span_b_buffer[0]);
             printf(output);
             SendNotification(output);
-            uploadNotification(output);
             uploadSSBAlert(timestamp, EnumToString(Period()), sname, "buy", buy, senkou_span_b_buffer[0]);
            }
 
@@ -302,10 +299,9 @@ void Ichimoku()
            }
          if(sell == senkou_span_b_buffer[0])
            {
-            string output = timestamp + " (" + EnumToString(Period()) + ") : " + sname + " SELL == SSB sell = " + DoubleToString(sell) + " ssb =  " + DoubleToString(senkou_span_b_buffer[0]);
+            string output = /*timestamp +*/ " (" + EnumToString(Period()) + ") : " + sname + " SELL == SSB sell = " + DoubleToString(sell) + " ssb =  " + DoubleToString(senkou_span_b_buffer[0]);
             printf(output);
             SendNotification(output);
-            uploadNotification(output);
             uploadSSBAlert(timestamp, EnumToString(Period()), sname, "sell", sell, senkou_span_b_buffer[0]);
            }
 
@@ -423,36 +419,14 @@ void OnBookEvent(const string &symbol)
   }
 //+------------------------------------------------------------------+
 
-void uploadNotification(string notification){
-   // "https://YOURPHPWEBSITEURL.000webhostapp.com/?notification=test"
-   string cookie=NULL,headers; 
-   char post[],result[]; 
-   string google_url="https://YOURPHPWEBSITEURL.000webhostapp.com/?notification=" + notification; 
-   int timeout=5000; //--- Timeout below 1000 (1 sec.) is not enough for slow Internet connection 
-   int res=WebRequest("GET",google_url,cookie,NULL,timeout,post,0,result,headers); 
-   if(res==-1) 
-     { 
-      Print("Error in WebRequest. Error code  =",GetLastError()); 
-      //--- Perhaps the URL is not listed, display a message about the necessity to add the address 
-      //MessageBox("Add the address '"+google_url+"' in the list of allowed URLs on tab 'Expert Advisors'","Error",MB_ICONINFORMATION); 
-     } 
-   else 
-     { 
-      printf(CharArrayToString(result));
-      //--- Load successfully 
-      //PrintFormat("The file has been successfully loaded, File size =%d bytes.",ArraySize(result)); 
-      printf("Notification sent successfully");
-     } 
-}
-
 void uploadSSBAlert(string timestamp, string period, string name, string type, double price, double ssb){
-   // "https://YOURPHPWEBSITEURL.000webhostapp.com/?notification=test"
+   // "https://ichimoku-ea.000webhostapp.com/?notification=test"
    string cookie=NULL,headers; 
    char post[],result[]; 
    
    string ssbalert = timestamp + ";" + period + ";" + name + ";" + type + ";" + DoubleToString(price) + ";" + DoubleToString(ssb);
    
-   string google_url="https://YOURPHPWEBSITEURL.000webhostapp.com/?upload_ssb_alert=" + ssbalert; 
+   string google_url="https://ichimoku-ea.000webhostapp.com/?upload_ssb_alert=" + ssbalert; 
    int timeout=5000; //--- Timeout below 1000 (1 sec.) is not enough for slow Internet connection 
    int res=WebRequest("GET",google_url,cookie,NULL,timeout,post,0,result,headers); 
    if(res==-1) 
@@ -472,32 +446,10 @@ void uploadSSBAlert(string timestamp, string period, string name, string type, d
 
 
 void resetAllRemoteData(){
-   // "https://YOURPHPWEBSITEURL.000webhostapp.com/?notification=test"
+   // "https://ichimoku-ea.000webhostapp.com/?notification=test"
    string cookie=NULL,headers; 
    char post[],result[]; 
-   string google_url="https://YOURPHPWEBSITEURL.000webhostapp.com/?reset_all=true"; 
-   int timeout=5000; //--- Timeout below 1000 (1 sec.) is not enough for slow Internet connection 
-   int res=WebRequest("GET",google_url,cookie,NULL,timeout,post,0,result,headers); 
-   if(res==-1) 
-     { 
-      Print("Error in WebRequest. Error code  =",GetLastError()); 
-      //--- Perhaps the URL is not listed, display a message about the necessity to add the address 
-      //MessageBox("Add the address '"+google_url+"' in the list of allowed URLs on tab 'Expert Advisors'","Error",MB_ICONINFORMATION); 
-     } 
-   else 
-     { 
-      printf(CharArrayToString(result));
-      //--- Load successfully 
-      //PrintFormat("The file has been successfully loaded, File size =%d bytes.",ArraySize(result)); 
-      printf("Reset command sent successfully");
-     } 
-}
-
-void resetNotificationsRemoteData(){
-   // "https://YOURPHPWEBSITEURL.000webhostapp.com/?notification=test"
-   string cookie=NULL,headers; 
-   char post[],result[]; 
-   string google_url="https://YOURPHPWEBSITEURL.000webhostapp.com/?reset_notifications=true"; 
+   string google_url="https://ichimoku-ea.000webhostapp.com/?reset_all=true"; 
    int timeout=5000; //--- Timeout below 1000 (1 sec.) is not enough for slow Internet connection 
    int res=WebRequest("GET",google_url,cookie,NULL,timeout,post,0,result,headers); 
    if(res==-1) 
@@ -516,10 +468,10 @@ void resetNotificationsRemoteData(){
 }
 
 void resetSSBAlertsRemoteData(){
-   // "https://YOURPHPWEBSITEURL.000webhostapp.com/?notification=test"
+   // "https://ichimoku-ea.000webhostapp.com/?notification=test"
    string cookie=NULL,headers; 
    char post[],result[]; 
-   string google_url="https://YOURPHPWEBSITEURL.000webhostapp.com/?reset_ssb_alerts=true"; 
+   string google_url="https://ichimoku-ea.000webhostapp.com/?reset_ssb_alerts=true"; 
    int timeout=5000; //--- Timeout below 1000 (1 sec.) is not enough for slow Internet connection 
    int res=WebRequest("GET",google_url,cookie,NULL,timeout,post,0,result,headers); 
    if(res==-1) 
