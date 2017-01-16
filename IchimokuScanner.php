@@ -54,7 +54,7 @@ if (LOG_IP==true){
     $db->close();
 }
 if (isset($_GET['view_logs'])) {
-    echo "<html><head><style> table { width:100%; } table, th, td { border: 1px solid black; border-collapse: collapse; } th, td { padding: 5px; text-align: left; } table#t01 tr:nth-child(even) { background-color: #eee; } table#t01 tr:nth-child(odd) { background-color:#fff; } table#t01 th { background-color: black; color: white; } </style><title></title></head><body  style='font-family:arial; color: #ffffff; background-color: #000000'>";
+    echo "<html><head><style> table { width:100%; } table, th, td { border: 1px solid black; border-collapse: collapse; } th, td { padding: 5px; text-align: left; } table#t01 tr:nth-child(even) { background-color: #eee; } table#t01 tr:nth-child(odd) { background-color:#fff; } table#t01 th { background-color: black; color: white; } </style><title>Ichimoku Scanner</title></head><body  style='font-family:arial; color: #ffffff; background-color: #000000'>";
     echo "<img src='ichimokuscannerlogo.PNG' alt='Ichimoku Scanner Logo'>";
     echo "<h3>Experimental version</h3><a href='http://traderetgagner.blogspot.com'>traderetgagner.blogspot.com</a><br/>";
     echo "<br/>";
@@ -101,7 +101,7 @@ if (isset($_GET['reset_ssb_alerts'])) {
     $db->close();
     exit;
 }
-echo "<html><head><style> table, th, td { border: 1px solid black; border-collapse: collapse; } th, td { padding: 5px; text-align: left; } table#t01 tr:nth-child(even) { background-color: #eee; } table#t01 tr:nth-child(odd) { background-color:#fff; } table#t01 th { background-color: black; color: white; } </style><title></title></head><body  style='font-family:arial; color: #ffffff; background-color: #000000'>";
+echo "<html><head><style> table, th, td { border: 1px solid black; border-collapse: collapse; } th, td { padding: 5px; text-align: left; } table#t01 tr:nth-child(even) { background-color: #eee; } table#t01 tr:nth-child(odd) { background-color:#fff; } table#t01 th { background-color: black; color: white; } </style><title>Ichimoku Scanner</title></head><body  style='font-family:arial; color: #ffffff; background-color: #000000'>";
 echo "<img src='ichimokuscannerlogo.PNG' alt='Ichimoku Scanner Logo'>";
 echo "<h3>Experimental version</h3><a href='http://traderetgagner.blogspot.com'>traderetgagner.blogspot.com</a><br/>";
 if (isset($_GET['upload_ssb_alert'])) {
