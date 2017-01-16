@@ -67,7 +67,7 @@ if (LOG_IP==true){
 
 if (isset($_GET['view_logs'])) {		
 	echo "<html><head><style>table, th, td { border: 1px solid black; border-collapse: collapse; } ";
-	echo "th, td { padding: 5px; text-align: left; } </style><title></title></head><body>";
+	echo "th, td { padding: 5px; text-align: left; } </style><title></title></head><body  style='font-family:arial; color: #ffffff; background-color: #000000'>";
 	echo "<h2>Ichimoku Scanner</h2>";
 	echo "<h3>Experimental version</h3><a href='http://traderetgagner.blogspot.com'>traderetgagner.blogspot.com</a><br/>";
 	echo "<br/>";
@@ -79,7 +79,7 @@ if (isset($_GET['view_logs'])) {
 		
 	$r = mysqli_query($db, "SELECT * FROM `ip_address_log` order by access_date_time desc");
 	if ($r->num_rows > 0) {
-		echo "<table>";
+		echo "<table style='border-width:2px; border-style:solid; border-color:white; width:50%;'>";
 		while($row = $r->fetch_assoc()) {
 			echo "<tr>";
 			$access_date_time = $row["access_date_time"];
@@ -130,7 +130,7 @@ if (isset($_GET['reset_ssb_alerts'])) {
 	exit;
 }
 echo "<html><head><style>table, th, td { border: 1px solid black; border-collapse: collapse; } ";
-echo "th, td { padding: 5px; text-align: left; } </style><title></title></head><body>";
+echo "th, td { padding: 5px; text-align: left; } </style><title></title></head><body  style='font-family:arial; color: #ffffff; background-color: #000000'>";
 echo "<h2>Ichimoku Scanner</h2>";
 echo "<h3>Experimental version</h3><a href='http://traderetgagner.blogspot.com'>traderetgagner.blogspot.com</a><br/>";
 if (isset($_GET['notification'])) {
@@ -235,7 +235,7 @@ foreach($arrayname as $name){
 	} else {
 		$lastprice = 0;
 		$firstprice = 0;
-		if (!$showOnlyResults) echo '<table>';
+		if (!$showOnlyResults) echo "<table style='border-width:2px; border-style:solid; border-color:white; width:50%;'>";
 		$index = 0;
 		if ($r->num_rows > 0) {
 			while($row = $r->fetch_assoc()) {
