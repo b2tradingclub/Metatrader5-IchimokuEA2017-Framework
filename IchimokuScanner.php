@@ -55,8 +55,7 @@ if (LOG_IP==true){
 }
 if (isset($_GET['view_logs'])) {
     echo "<html><head><style> table { width:100%; } table, th, td { border: 1px solid black; border-collapse: collapse; } th, td { padding: 5px; text-align: left; } table#t01 tr:nth-child(even) { background-color: #eee; } table#t01 tr:nth-child(odd) { background-color:#fff; } table#t01 th { background-color: black; color: white; } </style><title></title></head><body  style='font-family:arial; color: #ffffff; background-color: #000000'>";
-    echo "<img src='ichimokuscannerlogo.PNG'>";
-    echo "<h2>Ichimoku Scanner</h2>";
+    echo "<img src='ichimokuscannerlogo.PNG' alt='Ichimoku Scanner Logo'>";
     echo "<h3>Experimental version</h3><a href='http://traderetgagner.blogspot.com'>traderetgagner.blogspot.com</a><br/>";
     echo "<br/>";
     $db = new mysqli(MYSQL_SERVER, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
@@ -103,8 +102,7 @@ if (isset($_GET['reset_ssb_alerts'])) {
     exit;
 }
 echo "<html><head><style> table, th, td { border: 1px solid black; border-collapse: collapse; } th, td { padding: 5px; text-align: left; } table#t01 tr:nth-child(even) { background-color: #eee; } table#t01 tr:nth-child(odd) { background-color:#fff; } table#t01 th { background-color: black; color: white; } </style><title></title></head><body  style='font-family:arial; color: #ffffff; background-color: #000000'>";
-echo "<img src='ichimokuscannerlogo.PNG'>";
-echo "<h2>Ichimoku Scanner</h2>";
+echo "<img src='ichimokuscannerlogo.PNG' alt='Ichimoku Scanner Logo'>";
 echo "<h3>Experimental version</h3><a href='http://traderetgagner.blogspot.com'>traderetgagner.blogspot.com</a><br/>";
 if (isset($_GET['upload_ssb_alert'])) {
     $ssbalert = $_GET['upload_ssb_alert'];
@@ -172,19 +170,26 @@ if ($showOnlyToday){
     echo 'List of all SSB alerts<br/>';
 }
 
+if (isset($_GET['filter'])) {
+$filter = trim($_GET['filter']);
+}
 
-echo 'Timestamp/Period/Name/Type of price detected/Price/SSB<br/>';
+echo 'Timestamp/Period/Name/Type of price detected/Price/SSB<br/><br/>';
 foreach($arrayname as $name){
-    echo '<br/>';
-    echo $name . "<br/>";
+    //echo '<br/>';
+    //echo $name . "<br/>";
     if ($showOnlyToday){
         $r = mysqli_query($db, "select * from ssb_alert where name='" . $name . "' and timestamp like '" . $today . "%' order by timestamp desc");
     } else {
-        $r = mysqli_query($db, "select * from ssb_alert where name='" . $name . "' order by timestamp desc");
+        if ($filter != ""){
+            $r = mysqli_query($db, "select * from ssb_alert where name='" . $name . "' and name like '%" . $filter . "%'    order by timestamp desc");
+        } else {
+            $r = mysqli_query($db, "select * from ssb_alert where name='" . $name . "' order by timestamp desc");        }
     }
     if ($r->num_rows == 0){
-        echo 'No SSB alert.<br/>';
+        //echo 'No SSB alert.<br/>';
     } else {
+        echo $name . "<br/>";
         $lastprice = 0;
         $firstprice = 0;
         if (!$showOnlyResults) echo "<table>";
@@ -215,9 +220,10 @@ foreach($arrayname as $name){
                 echo "<font color='RED'>delta = " . $delta . '</font><br/>';
             }
             if ($delta == 0){
-                echo "<font color='BLACK'>delta = " . $delta . '</font><br/>';
+                echo "<font color='BLUE'>delta = " . $delta . '</font><br/>';
             }
         }
+        echo "<br/>";
     }
 }
 $db->close();
