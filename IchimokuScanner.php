@@ -210,6 +210,11 @@ if (isset($_GET['today'])) {
 	$showOnlyToday = true;
 }
 
+$showOnlyResults = false;
+if (isset($_GET['show_only_results'])) {
+	$showOnlyResults = true;
+}
+
 echo '<br/>';
 if ($showOnlyToday){
 	echo 'List of today SSB alerts (' . $today . ')<br/>';
@@ -230,7 +235,7 @@ foreach($arrayname as $name){
 	} else {
 		$lastprice = 0;
 		$firstprice = 0;
-		echo '<table>';
+		if (!$showOnlyResults) echo '<table>';
 		$index = 0;
 		if ($r->num_rows > 0) {
 			while($row = $r->fetch_assoc()) {
@@ -241,14 +246,14 @@ foreach($arrayname as $name){
 				}
 				$index++;
 				//echo '<br/>';
-				echo '<tr>';
-				echo '<td>' . $row["timestamp"] . "</td><td>" . $row["period"] . "</td><td>" . $row["name"] . "</td><td>" . $row["type"] . "</td><td>" . $row["price"] . "</td><td>" . $row["ssb"] . "</td>";
-				echo '</tr>';
+				if (!$showOnlyResults) echo '<tr>';
+				if (!$showOnlyResults) echo '<td>' . $row["timestamp"] . "</td><td>" . $row["period"] . "</td><td>" . $row["name"] . "</td><td>" . $row["type"] . "</td><td>" . $row["price"] . "</td><td>" . $row["ssb"] . "</td>";
+				if (!$showOnlyResults) echo '</tr>';
 			}
 		} else {
 			//echo "0 results";
 		}
-		echo '</table>';
+		if (!$showOnlyResults) echo '</table>';
 		if ($lastprice>0 && $firstprice>0){
 			$delta = ($lastprice-$firstprice);
 			if ($delta > 0){
