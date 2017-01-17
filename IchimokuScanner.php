@@ -174,6 +174,7 @@ if (isset($_GET['filter'])) {
 
 echo "<br/>";
 echo "<h3>Summary of results :</32>";
+echo '<h4>Name/Delta from first detection/Last detection timestamp<h4>';
 foreach($arrayname as $name){
     $r = mysqli_query($db, "select * from ssb_alert where name='" . $name . "' and name like '%" . $filter . "%'    order by timestamp desc");
     $index = 0;
@@ -195,6 +196,7 @@ foreach($arrayname as $name){
         if ($delta < 0) $color = 'RED';
         else if ($delta == 0) $color = 'GRAY';
         else if ($delta > 0) $color = 'GREEN';
+            $delta = number_format($delta, 6);
         echo "<tr>";
         echo "<td width='20%'>" . $name . "</td><td width='30%'><font color='" . $color . "'>" . $delta . "</font></td><td width='40%'>" . $lastdetection . "</td>";
         echo "</tr>";
@@ -248,6 +250,7 @@ foreach($arrayname as $name){
         if (!$showOnlyResults) echo '</table>';
         if ($lastprice>0 && $firstprice>0){
             $delta = ($lastprice-$firstprice);
+            $delta = number_format($delta, 6);
             if ($delta > 0){
                 echo "<font color='GREEN'>delta = " . $delta . '</font><br/>';
             }
