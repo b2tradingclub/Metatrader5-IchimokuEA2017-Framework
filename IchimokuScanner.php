@@ -183,7 +183,7 @@ foreach($arrayname as $name){
     while($row = $r->fetch_assoc()) {
         if ($index == 0){
             $lastprice = $row["price"];
-            $lastdetection = $row["timestamp"];
+            $lastdetection = explode(".", $row["timestamp"])[0];
         } else if ($index == ($r->num_rows)-1){
             $firstprice = $row["price"];
         }
