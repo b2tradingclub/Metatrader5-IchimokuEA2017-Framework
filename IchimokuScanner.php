@@ -56,7 +56,7 @@ if (LOG_IP==true){
 if (isset($_GET['view_logs'])) {
     echo "<html><head><style> table { width:100%; } table, th, td { border: 1px solid black; border-collapse: collapse; } th, td { padding: 5px; text-align: left; } table#t01 tr:nth-child(even) { background-color: #eee; } table#t01 tr:nth-child(odd) { background-color:#fff; } table#t01 th { background-color: black; color: white; } </style><title>Ichimoku Scanner</title></head><body  style='font-family:arial; color: #ffffff; background-color: #000000'>";
     echo "<img src='ichimokuscannerlogo.PNG' alt='Ichimoku Scanner Logo'>";
-    echo "<h3>Experimental version</h3><a href='http://traderetgagner.blogspot.com'>traderetgagner.blogspot.com</a><br/>";
+    echo "<h3>Logs</h3><a href='http://traderetgagner.blogspot.com'>traderetgagner.blogspot.com</a><br/>";
     echo "<br/>";
     $db = new mysqli(MYSQL_SERVER, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
     if ($db->connect_errno) {
@@ -103,7 +103,7 @@ if (isset($_GET['reset_ssb_alerts'])) {
 }
 echo "<html><head><style> table, th, td { border: 1px solid black; border-collapse: collapse; } th, td { padding: 5px; text-align: left; } table#t01 tr:nth-child(even) { background-color: #eee; } table#t01 tr:nth-child(odd) { background-color:#fff; } table#t01 th { background-color: black; color: white; } </style><title>Ichimoku Scanner</title></head><body  style='font-family:arial; color: #ffffff; background-color: #000000'>";
 echo "<img src='ichimokuscannerlogo.PNG' alt='Ichimoku Scanner Logo'>";
-echo "<h3>Experimental version</h3><a href='http://traderetgagner.blogspot.com'>traderetgagner.blogspot.com</a><br/>";
+echo "<h3>Volatility & Trend Scanner</h3><a href='http://traderetgagner.blogspot.com'>traderetgagner.blogspot.com</a><br/>";
 if (isset($_GET['upload_ssb_alert'])) {
     $ssbalert = $_GET['upload_ssb_alert'];
     echo "received=  [[$ssbalert]]<br/>";
@@ -196,7 +196,7 @@ foreach($arrayname as $name){
         else if ($delta == 0) $color = 'GRAY';
         else if ($delta > 0) $color = 'GREEN';
         echo "<tr>";
-        echo "<td width='25%'>" . $name . "</td><td width='25%'><font color='" . $color . "'>" . $delta . "</font></td><td>" . $lastdetection . "</td>";
+        echo "<td width='20%'>" . $name . "</td><td width='30%'><font color='" . $color . "'>" . $delta . "</font></td><td width='40%'>" . $lastdetection . "</td>";
         echo "</tr>";
     }
     echo "</table>";
