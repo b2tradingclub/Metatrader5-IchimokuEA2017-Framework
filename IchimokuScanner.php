@@ -154,6 +154,10 @@ if ($r->num_rows == 0){
     }
 }
 sort($arrayname);
+
+//Supprimer les "doublons" inutiles
+$r = mysqli_query($db, "DELETE t1 FROM ssb_alert AS t1, ssb_alert AS t2 WHERE t1.timestamp < t2.timestamp AND t1.name = t2.name AND t1.period = t2.period AND t1.type = t2.type and t1.price = t2.price and t1.ssb = t2.ssb");
+
 $today = ((new DateTime)->format("Y-m-d"));
 $showOnlyToday = false;
 if (isset($_GET['today'])) {
@@ -163,18 +167,49 @@ $showOnlyResults = false;
 if (isset($_GET['show_only_results'])) {
     $showOnlyResults = true;
 }
-echo '<br/>';
-if ($showOnlyToday){
-    echo 'List of today SSB alerts (' . $today . ')<br/>';
-} else {
-    echo 'List of all SSB alerts<br/>';
-}
 
 if (isset($_GET['filter'])) {
-$filter = trim($_GET['filter']);
+    $filter = trim($_GET['filter']);
 }
 
-echo 'Timestamp/Period/Name/Type of price detected/Price/SSB<br/><br/>';
+echo "<br/>";
+echo "<h3>Summary of results :</32>";
+foreach($arrayname as $name){
+    $r = mysqli_query($db, "select * from ssb_alert where name='" . $name . "' and name like '%" . $filter . "%'    order by timestamp desc");
+    $index = 0;
+    $lastprice = 0;
+    $firstprice = 0;
+    $lastdetection = "";
+    while($row = $r->fetch_assoc()) {
+        if ($index == 0){
+            $lastprice = $row["price"];
+            $lastdetection = $row["timestamp"];
+        } else if ($index == ($r->num_rows)-1){
+            $firstprice = $row["price"];
+        }
+        $index++;    
+    }
+    echo "<table width='50%'>";
+    if ($lastprice != 0 && $firstprice != 0){
+        $delta = $lastprice - $firstprice;
+        if ($delta < 0) $color = 'RED';
+        else if ($delta == 0) $color = 'GRAY';
+        else if ($delta > 0) $color = 'GREEN';
+        echo "<tr>";
+        echo "<td width='25%'>" . $name . "</td><td width='25%'><font color='" . $color . "'>" . $delta . "</font></td><td>" . $lastdetection . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+}
+
+echo '<br/>';
+if ($showOnlyToday){
+    echo '<h3>List of today SSB alerts (' . $today . ')</h3>';
+} else {
+    echo '<h3>List of all SSB alerts</h3>';
+}
+
+echo '<h4>Timestamp/Period/Name/Type of price detected/Price/SSB</h4>';
 foreach($arrayname as $name){
     //echo '<br/>';
     //echo $name . "<br/>";
