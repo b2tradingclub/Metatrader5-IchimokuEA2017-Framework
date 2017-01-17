@@ -54,7 +54,7 @@ if (LOG_IP==true){
     $db->close();
 }
 if (isset($_GET['view_logs'])) {
-    echo "<html><head><style> table { width:100%; } table, th, td { border: 1px solid black; border-collapse: collapse; } th, td { padding: 5px; text-align: left; } table#t01 tr:nth-child(even) { background-color: #eee; } table#t01 tr:nth-child(odd) { background-color:#fff; } table#t01 th { background-color: black; color: white; } </style><title>Ichimoku Scanner</title></head><body  style='font-family:arial; color: #ffffff; background-color: #000000'>";
+    echo "<html><head><style> table { width:100%; } table, th, td { border: 1px solid gray; border-collapse: collapse; } th, td { padding: 5px; text-align: left; } table#t01 tr:nth-child(even) { background-color: #eee; } table#t01 tr:nth-child(odd) { background-color:#fff; } table#t01 th { background-color: black; color: white; } </style><title>Ichimoku Scanner</title></head><body  style='font-family:arial; color: #ffffff; background-color: #000000'>";
     echo "<img src='ichimokuscannerlogo.PNG' alt='Ichimoku Scanner Logo'>";
     echo "<h3>Logs</h3><a href='http://traderetgagner.blogspot.com'>traderetgagner.blogspot.com</a><br/>";
     echo "<br/>";
@@ -174,31 +174,56 @@ if (isset($_GET['filter'])) {
 
 echo "<br/>";
 echo "<h3>Summary of results :</32>";
-echo '<h4>Name/Delta from first detection/Last detection timestamp<h4>';
+echo '<h4>Name/Delta from first detection/Last detection timestamp/Delta with previous SSB detection/Periods detected (more recent at left)<h4>';
 foreach($arrayname as $name){
     $r = mysqli_query($db, "select * from ssb_alert where name='" . $name . "' and name like '%" . $filter . "%'    order by timestamp desc");
     $index = 0;
     $lastprice = 0;
     $firstprice = 0;
     $lastdetection = "";
+    $previousprice = 0;
+    $periods = "";
     while($row = $r->fetch_assoc()) {
         if ($index == 0){
             $lastprice = $row["price"];
             $lastdetection = explode(".", $row["timestamp"])[0];
-        } else if ($index == ($r->num_rows)-1){
+        } else if ($index == 1){
+            $previousprice = $row["price"];
+        }
+        else if ($index == ($r->num_rows)-1){
             $firstprice = $row["price"];
         }
+        $periods = $periods . explode("_", $row["period"])[1] . "<-";
         $index++;    
     }
-    echo "<table width='50%'>";
+    echo "<table>";
     if ($lastprice != 0 && $firstprice != 0){
         $delta = $lastprice - $firstprice;
-        if ($delta < 0) $color = 'RED';
-        else if ($delta == 0) $color = 'GRAY';
-        else if ($delta > 0) $color = 'GREEN';
-            $delta = number_format($delta, 6);
+        if ($delta < 0) {
+            $color = 'RED';
+        }
+        else if ($delta == 0) { 
+            $color = 'GRAY';
+        }
+        else if ($delta > 0) { 
+            $color = 'GREEN';
+        }
+        
+        $delta = number_format($delta, 6);        
+        $deltawithprevious = number_format($lastprice-$previousprice,6);
+        
+        if ($deltawithprevious < 0) {
+            $color2 = 'RED';
+        }
+        else if ($deltawithprevious == 0) { 
+            $color2 = 'GRAY';
+        }
+        else if ($deltawithprevious > 0) { 
+            $color2 = 'GREEN';
+        }
+        
         echo "<tr>";
-        echo "<td width='20%'>" . $name . "</td><td width='30%'><font color='" . $color . "'>" . $delta . "</font></td><td width='40%'>" . $lastdetection . "</td>";
+        echo "<td width='120px'>" . $name . "</td><td width='100px'><font color='" . $color . "'>" . $delta . "</font></td><td width='150px'>" . $lastdetection . "</td><td width='100px'><font color='" . $color2 . "'>" . $deltawithprevious  . "</font></td><td width='500px'>" . $periods . "</td>";
         echo "</tr>";
     }
     echo "</table>";
