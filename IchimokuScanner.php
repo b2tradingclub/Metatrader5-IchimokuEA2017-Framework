@@ -241,7 +241,7 @@ foreach($arrayname as $name){
                 $index++;
                 //echo '<br/>';
                 if (!$showOnlyResults) echo '<tr>';
-                if (!$showOnlyResults) echo '<td>' . $row["timestamp"] . "</td><td>" . $row["period"] . "</td><td>" . $row["name"] . "</td><td>" . $row["type"] . "</td><td>" . $row["price"] . "</td><td>" . $row["ssb"] . "</td>";
+                if (!$showOnlyResults) echo '<td>' . explode(".", $row["timestamp"])[0] . "</td><td>" . explode("_", $row["period"])[1] . "</td><td>" . $row["name"] . "</td><td>" . $row["type"] . "</td><td>" . $row["price"] . "</td><td>" . $row["ssb"] . "</td>";
                 if (!$showOnlyResults) echo '</tr>';
             }
         } else {
