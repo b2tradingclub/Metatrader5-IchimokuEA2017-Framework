@@ -193,7 +193,7 @@ foreach($arrayname as $name){
         else if ($index == ($r->num_rows)-1){
             $firstprice = $row["price"];
         }
-        $periods = $periods . explode("_", $row["period"])[1] . "<-";
+        $periods = $periods . explode("_", $row["period"])[1] . "-";
         $index++;    
     }
     echo "<table>";
