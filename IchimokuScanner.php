@@ -7,6 +7,8 @@ define("CREATE_DB_IF_NOT_EXISTS", true);
 define("CREATE_TABLES_IF_NOT_EXIST", true);
 define("LOG_IP", true);
 define("LOG_IP_IGNORE", "78.201.68.");
+define("DISABLE_DETAILED_LOG_VIEW", true);
+
 // si le paramètre CREATE_DB_IF_NOT_EXISTS est défini à true alors tenter de créer la base de données dans paramètre MYSQL_DB
 if (CREATE_DB_IF_NOT_EXISTS == true){
     // CREATE DB IF NOT EXISTS
@@ -72,7 +74,11 @@ if (isset($_GET['view_logs'])) {
             $nslookup = $row["nslookup"];
             $url = $row["url"];
             $count = $row["count"];
-            echo "<td>" . $access_date_time . "</td><td>" . $ip_address . "</td><td>" . $nslookup . "</td><td>"  . $url . "</td><td>" . $count . "</td>";
+            if (!DISABLE_DETAILED_LOG_VIEW){
+                echo "<td>" . $access_date_time . "</td><td>" . $ip_address . "</td><td>" . $nslookup . "</td><td>"  . $url . "</td><td>" . $count . "</td>";
+            } else {
+                echo "<td>" . $access_date_time . "</td><td> DISABLED </td><td> DISABLED </td><td>"  . $url . "</td><td>" . $count . "</td>";
+            }
             echo "</tr>";
         }
         echo "</table>";
