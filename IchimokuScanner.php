@@ -187,10 +187,11 @@ foreach($arrayname as $name){
         if ($index == 0){
             $lastprice = $row["price"];
             $lastdetection = explode(".", $row["timestamp"])[0];
-        } else if ($index == 1){
+        }
+        if ($index == 1){
             $previousprice = $row["price"];
         }
-        else if ($index == ($r->num_rows)-1){
+        if ($index == ($r->num_rows)-1){
             $firstprice = $row["price"];
         }
         $periods = $periods . explode("_", $row["period"])[1] . "-";
