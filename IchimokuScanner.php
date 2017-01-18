@@ -210,8 +210,12 @@ foreach($arrayname as $name){
             $color = 'GREEN';
         }
         
-        $delta = number_format($delta, 6);        
-        $deltawithprevious = number_format($lastprice-$previousprice,6);
+        $delta = number_format($delta, 6);
+        
+        $deltawithprevious = 0;
+        if ($previousprice != 0){
+            $deltawithprevious = number_format($lastprice-$previousprice,6);
+        }
         
         if ($deltawithprevious < 0) {
             $color2 = 'RED';
