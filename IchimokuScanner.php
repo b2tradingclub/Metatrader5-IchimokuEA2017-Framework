@@ -179,7 +179,7 @@ if (isset($_GET['filter'])) {
 }
 
 echo "<br/>";
-echo "<h3>Summary of results :</32>";
+echo "<h3>Summary of results (MIXED BUY AND SELL PRICES) :</h3>";
 echo '<h4>Name/Delta from first detection/Last detection timestamp/Delta with previous SSB detection/Periods detected (more recent at left)<h4>';
 foreach($arrayname as $name){
     $r = mysqli_query($db, "select * from ssb_alert where name='" . $name . "' and name like '%" . $filter . "%'    order by timestamp desc");
@@ -200,7 +200,149 @@ foreach($arrayname as $name){
         if ($index == ($r->num_rows)-1){
             $firstprice = $row["price"];
         }
-        $periods = $periods . explode("_", $row["period"])[1] . "-";
+        $periods = $periods . explode("_", $row["period"])[1];
+        if ($row["type"] == "buy"){
+            $periods = $periods . "(b)-";
+        }
+        if ($row["type"] == "sell"){
+            $periods = $periods . "(s)-";
+        }
+        $index++;    
+    }
+    echo "<table>";
+    if ($lastprice != 0 && $firstprice != 0){
+        $delta = $lastprice - $firstprice;
+        if ($delta < 0) {
+            $color = 'RED';
+        }
+        else if ($delta == 0) { 
+            $color = 'GRAY';
+        }
+        else if ($delta > 0) { 
+            $color = 'GREEN';
+        }
+        
+        $delta = number_format($delta, 6);
+        
+        $deltawithprevious = 0;
+        if ($previousprice != 0){
+            $deltawithprevious = number_format($lastprice-$previousprice,6);
+        }
+        
+        if ($deltawithprevious < 0) {
+            $color2 = 'RED';
+        }
+        else if ($deltawithprevious == 0) { 
+            $color2 = 'GRAY';
+        }
+        else if ($deltawithprevious > 0) { 
+            $color2 = 'GREEN';
+        }
+        
+        echo "<tr>";
+        echo "<td width='120px'>" . $name . "</td><td width='100px'><font color='" . $color . "'>" . $delta . "</font></td><td width='150px'>" . $lastdetection . "</td><td width='100px'><font color='" . $color2 . "'>" . $deltawithprevious  . "</font></td><td width='500px'>" . $periods . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+}
+
+echo "<br/>";
+echo "<h3>Summary of results (BUY PRICE) :</h3>";
+echo '<h4>Name/Delta from first detection/Last detection timestamp/Delta with previous SSB detection/Periods detected (more recent at left)<h4>';
+foreach($arrayname as $name){
+    $r = mysqli_query($db, "select * from ssb_alert where name='" . $name . "' and name like '%" . $filter . "%' and type='buy'    order by timestamp desc");
+    $index = 0;
+    $lastprice = 0;
+    $firstprice = 0;
+    $lastdetection = "";
+    $previousprice = 0;
+    $periods = "";
+    while($row = $r->fetch_assoc()) {
+        if ($index == 0){
+            $lastprice = $row["price"];
+            $lastdetection = explode(".", $row["timestamp"])[0];
+        }
+        if ($index == 1){
+            $previousprice = $row["price"];
+        }
+        if ($index == ($r->num_rows)-1){
+            $firstprice = $row["price"];
+        }
+        $periods = $periods . explode("_", $row["period"])[1];
+        if ($row["type"] == "buy"){
+            $periods = $periods . "(b)-";
+        }
+        if ($row["type"] == "sell"){
+            $periods = $periods . "(s)-";
+        }
+        $index++;    
+    }
+    echo "<table>";
+    if ($lastprice != 0 && $firstprice != 0){
+        $delta = $lastprice - $firstprice;
+        if ($delta < 0) {
+            $color = 'RED';
+        }
+        else if ($delta == 0) { 
+            $color = 'GRAY';
+        }
+        else if ($delta > 0) { 
+            $color = 'GREEN';
+        }
+        
+        $delta = number_format($delta, 6);
+        
+        $deltawithprevious = 0;
+        if ($previousprice != 0){
+            $deltawithprevious = number_format($lastprice-$previousprice,6);
+        }
+        
+        if ($deltawithprevious < 0) {
+            $color2 = 'RED';
+        }
+        else if ($deltawithprevious == 0) { 
+            $color2 = 'GRAY';
+        }
+        else if ($deltawithprevious > 0) { 
+            $color2 = 'GREEN';
+        }
+        
+        echo "<tr>";
+        echo "<td width='120px'>" . $name . "</td><td width='100px'><font color='" . $color . "'>" . $delta . "</font></td><td width='150px'>" . $lastdetection . "</td><td width='100px'><font color='" . $color2 . "'>" . $deltawithprevious  . "</font></td><td width='500px'>" . $periods . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+}
+
+echo "<br/>";
+echo "<h3>Summary of results (SELL PRICE) :</h3>";
+echo '<h4>Name/Delta from first detection/Last detection timestamp/Delta with previous SSB detection/Periods detected (more recent at left)<h4>';
+foreach($arrayname as $name){
+    $r = mysqli_query($db, "select * from ssb_alert where name='" . $name . "' and name like '%" . $filter . "%' and type='sell'    order by timestamp desc");
+    $index = 0;
+    $lastprice = 0;
+    $firstprice = 0;
+    $lastdetection = "";
+    $previousprice = 0;
+    $periods = "";
+    while($row = $r->fetch_assoc()) {
+        if ($index == 0){
+            $lastprice = $row["price"];
+            $lastdetection = explode(".", $row["timestamp"])[0];
+        }
+        if ($index == 1){
+            $previousprice = $row["price"];
+        }
+        if ($index == ($r->num_rows)-1){
+            $firstprice = $row["price"];
+        }
+        $periods = $periods . explode("_", $row["period"])[1];
+        if ($row["type"] == "buy"){
+            $periods = $periods . "(b)-";
+        }
+        if ($row["type"] == "sell"){
+            $periods = $periods . "(s)-";
+        }
         $index++;    
     }
     echo "<table>";
