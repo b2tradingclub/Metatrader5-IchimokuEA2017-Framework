@@ -8,7 +8,6 @@ define("CREATE_TABLES_IF_NOT_EXIST", true);
 define("LOG_IP", true);
 define("LOG_IP_IGNORE", "78.201.68.");
 define("DISABLE_DETAILED_LOG_VIEW", true);
-
 // si le paramètre CREATE_DB_IF_NOT_EXISTS est défini à true alors tenter de créer la base de données dans paramètre MYSQL_DB
 if (CREATE_DB_IF_NOT_EXISTS == true){
     // CREATE DB IF NOT EXISTS
@@ -97,7 +96,6 @@ if (isset($_GET['reset_all'])) {
     $db->close();
     exit;
 }
-
 if (isset($_GET['reset_ssb_alerts'])) {
     $db = new mysqli(MYSQL_SERVER, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
     if ($db->connect_errno) {
@@ -160,10 +158,8 @@ if ($r->num_rows == 0){
     }
 }
 sort($arrayname);
-
 //Supprimer les "doublons" inutiles
 $r = mysqli_query($db, "DELETE t1 FROM ssb_alert AS t1, ssb_alert AS t2 WHERE t1.timestamp < t2.timestamp AND t1.name = t2.name AND t1.period = t2.period AND t1.type = t2.type and t1.price = t2.price and t1.ssb = t2.ssb");
-
 $today = ((new DateTime)->format("Y-m-d"));
 $showOnlyToday = false;
 if (isset($_GET['today'])) {
@@ -173,12 +169,31 @@ $showOnlyResults = false;
 if (isset($_GET['show_only_results'])) {
     $showOnlyResults = true;
 }
-
 if (isset($_GET['filter'])) {
     $filter = trim($_GET['filter']);
 }
 
+if (isset($_GET['view_rates'])){
+    //experimental
+    echo "<br/>";
+    $page = file_get_contents("https://rates.fxcm.com/RatesXML");
+    $xml = new SimpleXMLElement($page);
+    $result = $xml->xpath('/Rates/Rate');
+    //echo 'result count = ' . count($result);
+    echo "<table>";
+    for($i=0;$i<count($result);$i++){
+        $symbol = (string) $result[$i]->xpath('@Symbol')[0];
+        $bid = (string) $result[$i]->xpath('Bid')[0]; // sell price
+        $ask = (string) $result[$i]->xpath('Ask')[0]; // buy price
+        echo "<tr>";
+        echo "<td>" . $symbol . '</td><td>' . $bid . '</td><td>' . $ask . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+    //end experimental
+}
 echo "<br/>";
+
 echo "<h3>Summary of results (MIXED BUY AND SELL PRICES) :</h3>";
 echo '<h4>Name/Delta from first detection/Last detection timestamp/Delta with previous SSB detection/Periods detected (more recent at left)<h4>';
 foreach($arrayname as $name){
@@ -221,14 +236,11 @@ foreach($arrayname as $name){
         else if ($delta > 0) { 
             $color = 'GREEN';
         }
-        
         $delta = number_format($delta, 6);
-        
         $deltawithprevious = 0;
         if ($previousprice != 0){
             $deltawithprevious = number_format($lastprice-$previousprice,6);
         }
-        
         if ($deltawithprevious < 0) {
             $color2 = 'RED';
         }
@@ -238,14 +250,12 @@ foreach($arrayname as $name){
         else if ($deltawithprevious > 0) { 
             $color2 = 'GREEN';
         }
-        
         echo "<tr>";
-        echo "<td width='120px'>" . $name . "</td><td width='100px'><font color='" . $color . "'>" . $delta . "</font></td><td width='150px'>" . $lastdetection . "</td><td width='100px'><font color='" . $color2 . "'>" . $deltawithprevious  . "</font></td><td width='500px'>" . $periods . "</td>";
+        echo "<td width='120px'>" . $name . "</td><td width='100px'><font color='" . $color . "'>" . $delta . "</font></td><td width='150px'>" . $lastdetection . "</td><td width='100px'><font color='" . $color2 . "'>" . $deltawithprevious  . "</font></td><td width='500px'>" . $periods . "</td></td>";
         echo "</tr>";
     }
     echo "</table>";
 }
-
 echo "<br/>";
 echo "<h3>Summary of results (BUY PRICE) :</h3>";
 echo '<h4>Name/Delta from first detection/Last detection timestamp/Delta with previous SSB detection/Periods detected (more recent at left)<h4>';
@@ -289,14 +299,11 @@ foreach($arrayname as $name){
         else if ($delta > 0) { 
             $color = 'GREEN';
         }
-        
         $delta = number_format($delta, 6);
-        
         $deltawithprevious = 0;
         if ($previousprice != 0){
             $deltawithprevious = number_format($lastprice-$previousprice,6);
         }
-        
         if ($deltawithprevious < 0) {
             $color2 = 'RED';
         }
@@ -306,14 +313,12 @@ foreach($arrayname as $name){
         else if ($deltawithprevious > 0) { 
             $color2 = 'GREEN';
         }
-        
         echo "<tr>";
         echo "<td width='120px'>" . $name . "</td><td width='100px'><font color='" . $color . "'>" . $delta . "</font></td><td width='150px'>" . $lastdetection . "</td><td width='100px'><font color='" . $color2 . "'>" . $deltawithprevious  . "</font></td><td width='500px'>" . $periods . "</td>";
         echo "</tr>";
     }
     echo "</table>";
 }
-
 echo "<br/>";
 echo "<h3>Summary of results (SELL PRICE) :</h3>";
 echo '<h4>Name/Delta from first detection/Last detection timestamp/Delta with previous SSB detection/Periods detected (more recent at left)<h4>';
@@ -357,14 +362,11 @@ foreach($arrayname as $name){
         else if ($delta > 0) { 
             $color = 'GREEN';
         }
-        
         $delta = number_format($delta, 6);
-        
         $deltawithprevious = 0;
         if ($previousprice != 0){
             $deltawithprevious = number_format($lastprice-$previousprice,6);
         }
-        
         if ($deltawithprevious < 0) {
             $color2 = 'RED';
         }
@@ -374,21 +376,18 @@ foreach($arrayname as $name){
         else if ($deltawithprevious > 0) { 
             $color2 = 'GREEN';
         }
-        
         echo "<tr>";
         echo "<td width='120px'>" . $name . "</td><td width='100px'><font color='" . $color . "'>" . $delta . "</font></td><td width='150px'>" . $lastdetection . "</td><td width='100px'><font color='" . $color2 . "'>" . $deltawithprevious  . "</font></td><td width='500px'>" . $periods . "</td>";
         echo "</tr>";
     }
     echo "</table>";
 }
-
 echo '<br/>';
 if ($showOnlyToday){
     echo '<h3>List of today SSB alerts (' . $today . ')</h3>';
 } else {
     echo '<h3>List of all SSB alerts</h3>';
 }
-
 echo '<h4>Timestamp/Period/Name/Type of price detected/Price/SSB</h4>';
 foreach($arrayname as $name){
     //echo '<br/>';
