@@ -6,7 +6,6 @@
 
 //Ichimoku2017_EA_PEqSSB-CTF.mq5 : Scans for Price Equals SSB on Current Time Frame
 
-//notif:android mt5,mt4=DB4F3016,EEF637E9,997CD24C,E0358708,96ABD519,B22E3F84
 //contient aussi le code pour dumper les données ichimoku vers csv
 
 #property copyright "Copyright 2017, Trader77330@NetCourrier.com"
@@ -340,8 +339,9 @@ void Ichimoku()
       printf("Processing end = " + IntegerToString(processingEnd));
       int processingDelta = processingEnd - processingStart;
       int seconds = processingDelta/1000;
-      printf("Total processing time = " + IntegerToString(processingDelta) + "ms = " + IntegerToString(seconds) + "s");
-      SendNotification("Total processing time = " + IntegerToString(processingDelta) + "ms = " + IntegerToString(seconds) + "s");
+      string output = StringSubstr(__FILE__,0,StringLen(__FILE__)-4) + " (" + EnumToString(Period()) + ") : Total processing time = " + IntegerToString(processingDelta) + "ms = " + IntegerToString(seconds) + "s";
+      printf(output);
+      SendNotification(output);
   }
   
 //+------------------------------------------------------------------+
