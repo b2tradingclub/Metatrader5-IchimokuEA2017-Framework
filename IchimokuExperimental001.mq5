@@ -26,7 +26,7 @@ double currentEquity = 0;
 
 input bool exportPrices = false;
 int file_handle = INVALID_HANDLE; // File handle
-input int scanPeriod = 15;
+input int scanPeriod = 20;
 input bool onlySymbolsInMarketwatch = true;
 input string symbolToIgnore = "EURCZK";
 // TODO : Gérer plusieurs symboles séparés par des virgules
@@ -49,11 +49,11 @@ int OnInit()
    printf(output);
    SendNotification(output);
    //resetAllRemoteData();
-   //output = "Version info : " + versionInfo;
-   //printf(output);
-   //SendNotification(output);
-   output = "exportPrices = " + exportPrices;
+   output = "Version info : " + versionInfo;
    printf(output);
+   SendNotification(output);
+   //output = "exportPrices = " + exportPrices;
+   //printf(output);
    //SendNotification(output);
    if(exportPrices)
      {
@@ -203,6 +203,9 @@ void Ichimoku()
 
       initdone = true;
      }
+     
+   int processingStart = GetTickCount();
+   printf("Processing start = " + IntegerToString(processingStart));
 
    for(int sindex=0; sindex<stotal; sindex++)
      {
@@ -328,8 +331,17 @@ void Ichimoku()
 
       IndicatorRelease(handle);
       // Fin Traitements M15
+      
+      Sleep(25);
 
      } // fin boucle sur sindex (symbol index)
+     
+      int processingEnd = GetTickCount();
+      printf("Processing end = " + IntegerToString(processingEnd));
+      int processingDelta = processingEnd - processingStart;
+      int seconds = processingDelta/1000;
+      printf("Total processing time = " + IntegerToString(processingDelta) + "ms = " + IntegerToString(seconds) + "s");
+      SendNotification("Total processing time = " + IntegerToString(processingDelta) + "ms = " + IntegerToString(seconds) + "s");
   }
   
 //+------------------------------------------------------------------+
