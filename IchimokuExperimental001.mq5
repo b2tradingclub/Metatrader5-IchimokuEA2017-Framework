@@ -1,15 +1,14 @@
 //+------------------------------------------------------------------+
-//|                                     Ichimoku2017_EA_PEqSSB-CTF.mq5 |
+//|                                     IchimokuExperimental001.mq5 |
 //|                                   Copyright 2017, Trader77330@NetCourrier.Com|
 //|                                   https://traderetgagner.blogspot.com |
 //+------------------------------------------------------------------+
 
-//Ichimoku2017_EA_PEqSSB-CTF.mq5 : Scans for Price Equals SSB on Current Time Frame
+//IchimokuExperimental001.mq5 : Scans for Price Equals SSB on Current Time Frame
+//AND UPLOADS INFORMATION TO http://ichimoku-ea.000webhostapp.com
 
-//contient aussi le code pour dumper les données ichimoku vers csv
-
-#property copyright "Copyright 2017, Trader77330@NetCourrier.com"
-#property link      "https://traderetgagner.blogspot.com"
+#property copyright "Copyright 2017, Investdata Systems"
+#property link      "https://ichimoku-expert.blogspot.com"
 #property version   "1.01"
 //+------------------------------------------------------------------+
 //| Expert initialization function                                   |
@@ -25,13 +24,13 @@ double currentEquity = 0;
 
 input bool exportPrices = false;
 int file_handle = INVALID_HANDLE; // File handle
-input int scanPeriod = 20;
+input int scanPeriod = 30;
 input bool onlySymbolsInMarketwatch = true;
 input string symbolToIgnore = "EURCZK";
 // TODO : Gérer plusieurs symboles séparés par des virgules
 
 string appVersion = "PEqSSB-CTF";
-string versionInfo = "This version scans for price == SSB on current timeframe (" + EnumToString(Period()) + ")";
+string versionInfo = "Scans for price == SSB on current timeframe (" + EnumToString(Period()) + ")";
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -42,15 +41,15 @@ int OnInit()
    string timestamp = string(mqd.year) + "-" + IntegerToString(mqd.mon,2,'0') + "-" + IntegerToString(mqd.day,2,'0')+ " " + IntegerToString(mqd.hour,2,'0') + ":" + IntegerToString(mqd.min,2,'0') + ":" + IntegerToString(mqd.sec,2,'0');
 
    string output = "";
-   output = timestamp + " Starting Ichimoku EA 2017 " + appVersion + " Trader77330@NetCourrier.Com";
+   output = timestamp + " Starting IchimokuExperimental001.mq5 " + appVersion + " Investdata Systems";
    output = output + " Version info : " + versionInfo;
    output = output + " https://ichimoku-ea.000webhostapp.com/";
    printf(output);
    SendNotification(output);
    //resetAllRemoteData();
-   output = "Version info : " + versionInfo;
-   printf(output);
-   SendNotification(output);
+   //output = "Version info : " + versionInfo;
+   //printf(output);
+   //SendNotification(output);
    //output = "exportPrices = " + exportPrices;
    //printf(output);
    //SendNotification(output);
@@ -60,12 +59,9 @@ int OnInit()
      }
 
    ObjectsDeleteAll(0,"",-1,-1);
-   //CloseAllPositions();
-   //--- create timer
    EventSetTimer(scanPeriod); // 30 secondes pour tout (pas seulement marketwatch)
 
    initialEquity = accountInfo.Equity();
-   //ReadLinearRegressionChannelData();
 
    if(exportPrices)
      {
@@ -89,37 +85,20 @@ int OnInit()
 //+------------------------------------------------------------------+
 void OnDeinit(const int reason)
   {
-//CloseAllPositions();
-
    if(exportPrices)
      {
       //--- Close the file
       FileClose(file_handle);
      }
 
-//--- destroy timer
    EventKillTimer();
 
   }
 //+------------------------------------------------------------------+
 //| Expert tick function                                             |
 //+------------------------------------------------------------------+
-
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 void OnTick()
   {
-  //Ichimoku();
-
-   return;
-
-   MqlTick lasttick;
-   SymbolInfoTick(Symbol(),lasttick);
-   double sell=lasttick.bid, buy=lasttick.ask, spread=buy-sell; 
-   ulong vol=lasttick.volume;
-   //printf("sell="+string(sell)+" ; buy="+string(buy)+ " ; spread="+string(spread) + " ; vol="+string(vol));
-   
   }
   
 //+------------------------------------------------------------------+
@@ -132,14 +111,11 @@ bool expiration_notified = false;
 //+------------------------------------------------------------------+
 void OnTimer()
   {
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
    if(TimeCurrent()>allowed_until)
      {
       if(expiration_notified==false)
         {
-         string output = "Ichimoku EA 2017 " + appVersion + " : EXPIRED. Please contact Trader77330@NetCourrier.com (+33)787817434";
+         string output = StringSubstr(__FILE__,0,StringLen(__FILE__)-4) + "(" + EnumToString(Period()) + ") " + appVersion + " : EXPIRED. Please contact Investdata Systems (+33)787817434";
          printf(output);
          SendNotification(output);
          expiration_notified=true;
@@ -204,7 +180,7 @@ void Ichimoku()
      }
      
    int processingStart = GetTickCount();
-   printf("Processing start = " + IntegerToString(processingStart));
+   //printf("Processing start = " + IntegerToString(processingStart));
 
    for(int sindex=0; sindex<stotal; sindex++)
      {
@@ -213,11 +189,11 @@ void Ichimoku()
 
       if(sname == symbolToIgnore)
         {
-         printf(StringSubstr(__FILE__,0,StringLen(__FILE__)-4) + "(" + EnumToString(Period()) + ") : Ignoring = " + sname + " " + (sindex+1) + "/" + stotal);
+         //printf(StringSubstr(__FILE__,0,StringLen(__FILE__)-4) + "(" + EnumToString(Period()) + ") : Ignoring = " + sname + " " + (sindex+1) + "/" + stotal);
          continue;
         }
 
-      printf(StringSubstr(__FILE__,0,StringLen(__FILE__)-4) + "(" + EnumToString(Period()) +  ") : Processing = " + sname + " " + (sindex+1) + "/" + stotal);
+      //printf(StringSubstr(__FILE__,0,StringLen(__FILE__)-4) + "(" + EnumToString(Period()) +  ") : Processing = " + sname + " " + (sindex+1) + "/" + stotal);
 
       MqlTick lasttick;
       double price;
@@ -287,7 +263,7 @@ void Ichimoku()
            {
             string output = /*timestamp +*/ " (" + EnumToString(Period()) + ") : " + sname + " BUY == SSB buy = " + DoubleToString(buy) + " ssb =  " + DoubleToString(senkou_span_b_buffer[0]);
             printf(output);
-            SendNotification(output);
+            //SendNotification(output);
             uploadSSBAlert(timestamp, EnumToString(Period()), sname, "buy", buy, senkou_span_b_buffer[0]);
            }
 
@@ -303,7 +279,7 @@ void Ichimoku()
            {
             string output = /*timestamp +*/ " (" + EnumToString(Period()) + ") : " + sname + " SELL == SSB sell = " + DoubleToString(sell) + " ssb =  " + DoubleToString(senkou_span_b_buffer[0]);
             printf(output);
-            SendNotification(output);
+            //SendNotification(output);
             uploadSSBAlert(timestamp, EnumToString(Period()), sname, "sell", sell, senkou_span_b_buffer[0]);
            }
 
@@ -320,7 +296,7 @@ void Ichimoku()
            }
 
          //printf(sname + " : M15 : OK");
-
+         Sleep(10);
         }
       else
         {
@@ -331,17 +307,17 @@ void Ichimoku()
       IndicatorRelease(handle);
       // Fin Traitements M15
       
-      Sleep(25);
+      Sleep(100);
 
      } // fin boucle sur sindex (symbol index)
      
       int processingEnd = GetTickCount();
-      printf("Processing end = " + IntegerToString(processingEnd));
+      //printf("Processing end = " + IntegerToString(processingEnd));
       int processingDelta = processingEnd - processingStart;
       int seconds = processingDelta/1000;
       string output = StringSubstr(__FILE__,0,StringLen(__FILE__)-4) + " (" + EnumToString(Period()) + ") : Total processing time = " + IntegerToString(processingDelta) + "ms = " + IntegerToString(seconds) + "s";
-      printf(output);
-      SendNotification(output);
+      //printf(output);
+      //SendNotification(output);
   }
   
 //+------------------------------------------------------------------+
