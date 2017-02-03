@@ -46,7 +46,6 @@ if (CREATE_TABLES_IF_NOT_EXIST == true){
     $sql="ALTER TABLE " . TBL_PREFIX . "_history MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;";
     $r = mysqli_query($db, $sql);    
     $db->close();
-
 }
 // LOG IP si paramètre LOG_IP = true
 if (LOG_IP==true){
@@ -151,6 +150,37 @@ if (isset($_GET['upload_history'])) {
     }
 }
 
+if (isset($_GET['upload_2jcs_alert'])) {
+    $jcsalert = $_GET['upload_2jcs_alert'];
+    echo "received=  [[$jcsalert]]<br/>";
+    $array = explode(";", $jcsalert);
+    if (count($array)==6){
+        $timestamp = $array[0];
+        $period = $array[1];
+        $symbol = $array[2];
+        $buy = $array[3];
+        $sell = $array[4];
+        $h1_ls_validated = $array[5];
+        $db = new mysqli(MYSQL_SERVER, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
+        if ($db->connect_errno) {
+            echo "Error : " . $db->connect_errno . " <br/>";
+            exit;
+        }
+        $r = mysqli_query($db, "select * from " . TBL_PREFIX . "_2jcs_alert");
+        if ($r->num_rows == 0){
+            echo 'No 2JCS alert.<br/>';
+        } else {
+            echo $r->num_rows . " 2JCS alerts in table<br/>";
+        }
+        //$timestamp = (new DateTime())->format('Y-m-d H:i:s');
+        $r = mysqli_query($db, "insert into " . TBL_PREFIX . "_2jcs_alert (timestamp, period, symbol, buy, sell, h1_ls_validated) values ('" . $timestamp . "', '" . $period . "', '" . $symbol . "', '" . $buy . "', '" . $sell . "', '" . $h1_ls_validated . "')");
+        if (DEBUG) echo '2JCS alert recorded OK.<br/>';
+        $db->close();
+        exit;
+    }
+}
+
+
 if (isset($_GET['upload_ssb_alert'])) {
     $ssbalert = $_GET['upload_ssb_alert'];
     echo "received=  [[$ssbalert]]<br/>";
@@ -214,7 +244,7 @@ if (isset($_GET['view_rates'])){
 }
 
 echo "<br/>";
-echo "<h3>Summary of database recording :</h3>";
+echo "<h3>Summary of alerts in dabatase :</h3>";
 
 $count = 0;
 
@@ -224,12 +254,34 @@ if ($db->connect_errno) {
     exit;
 }
 
-    $r = mysqli_query($db, "select count(*) from " . TBL_PREFIX . "_history");
-    while($row = $r->fetch_assoc()) {
-        if ($index == 0){
-            $count = $row["count(*)"];
-        }
+$r = mysqli_query($db, "select * from " . TBL_PREFIX . "_2jcs_alert order by timestamp desc");
+echo "<table>";
+echo "<tr><th>Timestamp</th><th>Period</th><th>Symbol</th><th>Buy</th><th>Sell</th><th>H1 LS Validation</th></tr>";
+while($row = $r->fetch_assoc()) {
+    $timestamp = $row["timestamp"];
+    $period = $row["period"];
+    $symbol = $row["symbol"];
+    $buy = $row["buy"];
+    $sell = $row["sell"];
+    $h1_ls_validated = $row["h1_ls_validated"];
+    //echo $timestamp . " " . $period . " " . $symbol . " " . $buy . " " . $sell . " " . $h1_ls_validated . "<br/>";
+    echo "<tr>";
+    echo "<td>" . $timestamp . "</td><td>" . $period . "</td><td>" . $symbol . "</td><td>" . $buy . "</td><td>" . $sell . "</td><td>" . $h1_ls_validated . "</td>";
+    echo "</tr>";
+}
+echo "</table>";
+
+echo "<br/>";
+echo "<h3>Summary of database recording :</h3>";
+
+$count = 0;
+
+$r = mysqli_query($db, "select count(*) from " . TBL_PREFIX . "_history");
+while($row = $r->fetch_assoc()) {
+    if ($index == 0){
+        $count = $row["count(*)"];
     }
+}
 
 echo "count = " . $count;
 echo "<br/>";
