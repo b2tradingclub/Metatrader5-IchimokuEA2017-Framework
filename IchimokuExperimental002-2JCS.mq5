@@ -194,8 +194,10 @@ int stotal=0;
 //|                                                                  |
 //+------------------------------------------------------------------+
 void Ichimoku()
-  {
-                        string output=timestamp+"-"+sname+" ("+EnumToString(Period())+")"+" : ";
+
+//removed code
+
+string output=timestamp+"-"+sname+" ("+EnumToString(Period())+")"+" : ";
                         output+="n-2 under SSB and n-1 over SSB";
                         output+=" ; buy="+ DoubleToString(buy) + " sell="+ DoubleToString(sell);
                         if (checkPeriod(PERIOD_H1)) output+=" LS VALIDATED IN H1";
@@ -206,6 +208,7 @@ void Ichimoku()
                         timestamp+=IntegerToString(GetTickCount());
                         upload2JCSAlert(timestamp, EnumToString(Period()), sname, buy, sell, (string)checkPeriod(PERIOD_H1), (string)checkPeriod(PERIOD_M1));
 
+//removed code
 
    int processingEnd=GetTickCount();
 //printf("Processing end = " + IntegerToString(processingEnd));
@@ -228,8 +231,7 @@ void Ichimoku()
 bool checkPeriod(ENUM_TIMEFRAMES period)
   {
    bool result=false;
-
-
+//removed code
    return result;
   }
 //+------------------------------------------------------------------+
@@ -345,7 +347,7 @@ void upload2JCSAlert(string timestamp,string period,string symbol,double buy,dou
    string cookie=NULL,headers;
    char post[],result[];
 
-   string jcsalert=timestamp+";"+period+";"+symbol+";"+DoubleToString(buy)+";"+DoubleToString(sell)+";"+h1_ls_validated+","+m1_ls_validated;
+   string jcsalert=timestamp+";"+period+";"+symbol+";"+DoubleToString(buy)+";"+DoubleToString(sell)+";"+h1_ls_validated+";"+m1_ls_validated;
 
    string google_url="https://ichimoku-ea.000webhostapp.com/ichimoku-ea-v2/?upload_2jcs_alert="+jcsalert;
    int timeout=5000; //--- Timeout below 1000 (1 sec.) is not enough for slow Internet connection 
