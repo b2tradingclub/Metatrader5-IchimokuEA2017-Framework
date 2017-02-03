@@ -1,7 +1,7 @@
 //+------------------------------------------------------------------+
 //|                                     IchimokuExperimental002-2JCS.mq5 |
 //|                                   Copyright 2017, Trader77330@NetCourrier.Com|
-//|                                   https://traderetgagner.blogspot.com |
+//|                                   https://ichimoku-expert.blogspot.com |
 //+------------------------------------------------------------------+
 
 //IchimokuExperimental002-2JCS.mq5 : Scans for Price Equals SSB on Current Time Frame
@@ -195,18 +195,14 @@ int stotal=0;
 //+------------------------------------------------------------------+
 void Ichimoku()
   {
-  // SOURCE NOT AVAILABLE PUBLICLY FOR NOW
-  // THIS SOURCE CODE IS FOR SHOWING HOW TO SEND DATA TO REMOTE ICHIMOKU SCANNER V2
-  // DATA SENT ARE SYMBOL RATES (EACH TICKS)
+                        //timestamp+=IntegerToString(GetTickCount());
+                        //upload2JCSAlert(timestamp, EnumToString(Period()), sname, buy, sell, (string)checkPeriod(PERIOD_H1));                       
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool checkPeriod(ENUM_TIMEFRAMES period)
   {
-   bool result=false;
-
-   // SOURCE CODE NOT PUBLICLY AVAILABLE FOR NOW
    return result;
   }
 //+------------------------------------------------------------------+
@@ -312,6 +308,37 @@ void uploadHistory(string timestamp,string name,double buy,double sell)
      }
   //disableUploadHistory = true;
   }
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void upload2JCSAlert(string timestamp,string period,string symbol,double buy,double sell,string h1_ls_validated)
+  {
+// "https://ichimoku-ea.000webhostapp.com/ichimoku-ea-v2/?upload_2jcs_alert=test"
+   string cookie=NULL,headers;
+   char post[],result[];
+
+   string jcsalert=timestamp+";"+period+";"+symbol+";"+DoubleToString(buy)+";"+DoubleToString(sell)+";"+h1_ls_validated;
+
+   string google_url="https://ichimoku-ea.000webhostapp.com/ichimoku-ea-v2/?upload_2jcs_alert="+jcsalert;
+   int timeout=5000; //--- Timeout below 1000 (1 sec.) is not enough for slow Internet connection 
+   int res=WebRequest("GET",google_url,cookie,NULL,timeout,post,0,result,headers);
+   if(res==-1)
+     {
+      Print("Error in WebRequest. Error code  =",GetLastError());
+      //--- Perhaps the URL is not listed, display a message about the necessity to add the address 
+      //MessageBox("Add the address '"+google_url+"' in the list of allowed URLs on tab 'Expert Advisors'","Error",MB_ICONINFORMATION); 
+     }
+   else
+     {
+      //printf(CharArrayToString(result));
+      //--- Load successfully 
+      //PrintFormat("The file has been successfully loaded, File size =%d bytes.",ArraySize(result)); 
+      printf("2JCS Alert sent successfully");
+     }
+  }
+
+
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
