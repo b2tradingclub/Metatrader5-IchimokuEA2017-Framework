@@ -7,7 +7,7 @@ define("TBL_PREFIX", "ichimokueav2");
 define("CREATE_DB_IF_NOT_EXISTS", true);
 define("CREATE_TABLES_IF_NOT_EXIST", true);
 define("LOG_IP", true);
-define("LOG_IP_IGNORE", "78.201.68.");
+define("LOG_IP_IGNORE", "78.201.255.255");
 define("DISABLE_DETAILED_LOG_VIEW", true);
 define("DEBUG", true);
 // si le paramètre CREATE_DB_IF_NOT_EXISTS est défini à true alors tenter de créer la base de données dans paramètre MYSQL_DB
@@ -156,13 +156,14 @@ if (isset($_GET['upload_2jcs_alert'])) {
     $jcsalert = $_GET['upload_2jcs_alert'];
     echo "received=  [[$jcsalert]]<br/>";
     $array = explode(";", $jcsalert);
-    if (count($array)==6){
+    if (count($array)==7){
         $timestamp = $array[0];
         $period = $array[1];
         $symbol = $array[2];
         $buy = $array[3];
         $sell = $array[4];
         $h1_ls_validated = $array[5];
+        $m1_ls_validated = $array[5];
         $db = new mysqli(MYSQL_SERVER, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
         if ($db->connect_errno) {
             echo "Error : " . $db->connect_errno . " <br/>";
@@ -175,7 +176,7 @@ if (isset($_GET['upload_2jcs_alert'])) {
             echo $r->num_rows . " 2JCS alerts in table<br/>";
         }
         //$timestamp = (new DateTime())->format('Y-m-d H:i:s');
-        $r = mysqli_query($db, "insert into " . TBL_PREFIX . "_2jcs_alert (timestamp, period, symbol, buy, sell, h1_ls_validated) values ('" . $timestamp . "', '" . $period . "', '" . $symbol . "', '" . $buy . "', '" . $sell . "', '" . $h1_ls_validated . "')");
+        $r = mysqli_query($db, "insert into " . TBL_PREFIX . "_2jcs_alert (timestamp, period, symbol, buy, sell, h1_ls_validated, m1_ls_validated) values ('" . $timestamp . "', '" . $period . "', '" . $symbol . "', '" . $buy . "', '" . $sell . "', '" . $h1_ls_validated . "'," . $m1_ls_validated . "')");
         if (DEBUG) echo '2JCS alert recorded OK.<br/>';
         $db->close();
         exit;
