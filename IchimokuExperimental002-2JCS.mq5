@@ -195,14 +195,41 @@ int stotal=0;
 //+------------------------------------------------------------------+
 void Ichimoku()
   {
-                        //timestamp+=IntegerToString(GetTickCount());
-                        //upload2JCSAlert(timestamp, EnumToString(Period()), sname, buy, sell, (string)checkPeriod(PERIOD_H1));                       
+                        string output=timestamp+"-"+sname+" ("+EnumToString(Period())+")"+" : ";
+                        output+="n-2 under SSB and n-1 over SSB";
+                        output+=" ; buy="+ DoubleToString(buy) + " sell="+ DoubleToString(sell);
+                        if (checkPeriod(PERIOD_H1)) output+=" LS VALIDATED IN H1";
+                        if (checkPeriod(PERIOD_M1)) output+=" LS VALIDATED IN M1";
+                        printf(output);
+                        SendNotification(output);
+                        
+                        timestamp+=IntegerToString(GetTickCount());
+                        upload2JCSAlert(timestamp, EnumToString(Period()), sname, buy, sell, (string)checkPeriod(PERIOD_H1), (string)checkPeriod(PERIOD_M1));
+
+
+   int processingEnd=GetTickCount();
+//printf("Processing end = " + IntegerToString(processingEnd));
+   int processingDelta=processingEnd-processingStart;
+   int seconds=processingDelta/1000;
+   output=StringSubstr(__FILE__,0,StringLen(__FILE__)-4)+" ("+EnumToString(Period())+") : Total processing time = "+IntegerToString(processingDelta)+"ms = "+IntegerToString(seconds)+"s";
+   output+= " Memory used = " + IntegerToString(TerminalInfoInteger(TERMINAL_MEMORY_AVAILABLE));
+   output+= " Memory total = " + IntegerToString(TerminalInfoInteger(TERMINAL_MEMORY_TOTAL));
+   printf(output);
+//SendNotification(output);
+
+   // Si le déclenchement de cette fonction est fait depuis un OnTick, il est mieux d'avoir une temporisation ici
+   // Si le déclenchement est fait depuis un OnTimer, pas nécessaire
+   Sleep(250);
+
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool checkPeriod(ENUM_TIMEFRAMES period)
   {
+   bool result=false;
+
+
    return result;
   }
 //+------------------------------------------------------------------+
@@ -279,7 +306,7 @@ void OnBookEvent(const string &symbol)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool disableUploadHistory = true;
+bool disableUploadHistory = false;
 void uploadHistory(string timestamp,string name,double buy,double sell)
   {
    if (disableUploadHistory == true) return;
@@ -291,7 +318,7 @@ void uploadHistory(string timestamp,string name,double buy,double sell)
    string history = timestamp + ";" + name + ";" + DoubleToString(buy) + ";" + DoubleToString(sell);
 
    string google_url="https://ichimoku-ea.000webhostapp.com/ichimoku-ea-v2/?upload_history="+history;
-   int timeout=5000; //--- Timeout below 1000 (1 sec.) is not enough for slow Internet connection 
+   int timeout=2500; //--- Timeout below 1000 (1 sec.) is not enough for slow Internet connection 
    int res=WebRequest("GET",google_url,cookie,NULL,timeout,post,0,result,headers);
    if(res==-1)
      {
@@ -312,13 +339,13 @@ void uploadHistory(string timestamp,string name,double buy,double sell)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void upload2JCSAlert(string timestamp,string period,string symbol,double buy,double sell,string h1_ls_validated)
+void upload2JCSAlert(string timestamp,string period,string symbol,double buy,double sell,string h1_ls_validated,string m1_ls_validated)
   {
 // "https://ichimoku-ea.000webhostapp.com/ichimoku-ea-v2/?upload_2jcs_alert=test"
    string cookie=NULL,headers;
    char post[],result[];
 
-   string jcsalert=timestamp+";"+period+";"+symbol+";"+DoubleToString(buy)+";"+DoubleToString(sell)+";"+h1_ls_validated;
+   string jcsalert=timestamp+";"+period+";"+symbol+";"+DoubleToString(buy)+";"+DoubleToString(sell)+";"+h1_ls_validated+","+m1_ls_validated;
 
    string google_url="https://ichimoku-ea.000webhostapp.com/ichimoku-ea-v2/?upload_2jcs_alert="+jcsalert;
    int timeout=5000; //--- Timeout below 1000 (1 sec.) is not enough for slow Internet connection 
