@@ -4,7 +4,9 @@
 //|                                   https://ichimoku-expert.blogspot.com |
 //+------------------------------------------------------------------+
 
-//IchimokuExperimental002-2JCS.mq5 : Scans for Price Equals SSB on Current Time Frame
+//IchimokuExperimental002-2JCS.mq5 : 
+//Scans for some Ichimoku Kinko Hyo criterias in order to analyze the reaction of the markets to these.
+//This is research material. Contact me at +33 7 87 81 74 34 for more information about this work and advancement of it.
 
 //Si bougie actuelle est une nouvelle bougie
 
