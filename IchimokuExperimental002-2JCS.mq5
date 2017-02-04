@@ -1,6 +1,6 @@
 //+------------------------------------------------------------------+
 //|                                     IchimokuExperimental002-2JCS.mq5 |
-//|                                   Copyright 2017, Trader77330@NetCourrier.Com|
+//|                                   Copyright 2017, Investdata Systems
 //|                                   https://ichimoku-expert.blogspot.com |
 //+------------------------------------------------------------------+
 
@@ -77,7 +77,7 @@ int OnInit()
    if(exportPrices)
      {
       //--- Create file to write data in the common folder of the terminal
-      //C:\Users\Idjed\AppData\Roaming\MetaQuotes\Terminal\Common\Files
+      //C:\Users\InvestdataSystems\AppData\Roaming\MetaQuotes\Terminal\Common\Files
       MqlDateTime mqd;
       TimeCurrent(mqd);
       string timestamp=string(mqd.year)+IntegerToString(mqd.mon,2,'0')+IntegerToString(mqd.day,2,'0')+IntegerToString(mqd.hour,2,'0')+IntegerToString(mqd.min,2,'0')+IntegerToString(mqd.sec,2,'0');
@@ -195,9 +195,9 @@ int stotal=0;
 //+------------------------------------------------------------------+
 void Ichimoku()
 
-//removed code
+//removed code (contact me at +33 7 87 81 74 34 if interested by the actual work)
 
-string output=timestamp+"-"+sname+" ("+EnumToString(Period())+")"+" : ";
+                        string output=timestamp+"-"+sname+" ("+EnumToString(Period())+")"+" : ";
                         output+="n-2 under SSB and n-1 over SSB";
                         output+=" ; buy="+ DoubleToString(buy) + " sell="+ DoubleToString(sell);
                         if (checkPeriod(PERIOD_H1)) output+=" LS VALIDATED IN H1";
@@ -208,17 +208,17 @@ string output=timestamp+"-"+sname+" ("+EnumToString(Period())+")"+" : ";
                         timestamp+=IntegerToString(GetTickCount());
                         upload2JCSAlert(timestamp, EnumToString(Period()), sname, buy, sell, (string)checkPeriod(PERIOD_H1), (string)checkPeriod(PERIOD_M1));
 
-//removed code
+//removed code (contact me at +33 7 87 81 74 34 if interested by the actual work)
 
    int processingEnd=GetTickCount();
-//printf("Processing end = " + IntegerToString(processingEnd));
+   //printf("Processing end = " + IntegerToString(processingEnd));
    int processingDelta=processingEnd-processingStart;
    int seconds=processingDelta/1000;
    output=StringSubstr(__FILE__,0,StringLen(__FILE__)-4)+" ("+EnumToString(Period())+") : Total processing time = "+IntegerToString(processingDelta)+"ms = "+IntegerToString(seconds)+"s";
    output+= " Memory used = " + IntegerToString(TerminalInfoInteger(TERMINAL_MEMORY_AVAILABLE));
    output+= " Memory total = " + IntegerToString(TerminalInfoInteger(TERMINAL_MEMORY_TOTAL));
    printf(output);
-//SendNotification(output);
+   //SendNotification(output);
 
    // Si le déclenchement de cette fonction est fait depuis un OnTick, il est mieux d'avoir une temporisation ici
    // Si le déclenchement est fait depuis un OnTimer, pas nécessaire
@@ -313,7 +313,7 @@ void uploadHistory(string timestamp,string name,double buy,double sell)
   {
    if (disableUploadHistory == true) return;
 
-// "https://ichimoku-ea.000webhostapp.com/ichimoku-ea-v2/?upload_history="
+   // "https://ichimoku-ea.000webhostapp.com/ichimoku-ea-v2/?upload_history="
    string cookie=NULL,headers;
    char post[],result[];
 
@@ -335,7 +335,7 @@ void uploadHistory(string timestamp,string name,double buy,double sell)
       //PrintFormat("The file has been successfully loaded, File size =%d bytes.",ArraySize(result)); 
       //printf("History sent successfully");
      }
-  //disableUploadHistory = true;
+     //disableUploadHistory = true;
   }
 
 //+------------------------------------------------------------------+
@@ -343,7 +343,7 @@ void uploadHistory(string timestamp,string name,double buy,double sell)
 //+------------------------------------------------------------------+
 void upload2JCSAlert(string timestamp,string period,string symbol,double buy,double sell,string h1_ls_validated,string m1_ls_validated)
   {
-// "https://ichimoku-ea.000webhostapp.com/ichimoku-ea-v2/?upload_2jcs_alert=test"
+   // "https://ichimoku-ea.000webhostapp.com/ichimoku-ea-v2/?upload_2jcs_alert=test"
    string cookie=NULL,headers;
    char post[],result[];
 
@@ -373,7 +373,7 @@ void upload2JCSAlert(string timestamp,string period,string symbol,double buy,dou
 //+------------------------------------------------------------------+
 void uploadSSBAlert(string timestamp,string period,string name,string type,double price,double ssb)
   {
-// "https://ichimoku-ea.000webhostapp.com/?notification=test"
+   // "https://ichimoku-ea.000webhostapp.com/?notification=test"
    string cookie=NULL,headers;
    char post[],result[];
 
