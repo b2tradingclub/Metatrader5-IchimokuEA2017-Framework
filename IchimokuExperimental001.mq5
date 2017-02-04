@@ -1,7 +1,7 @@
 //+------------------------------------------------------------------+
 //|                                     IchimokuExperimental001.mq5 |
-//|                                   Copyright 2017, Trader77330@NetCourrier.Com|
-//|                                   https://traderetgagner.blogspot.com |
+//|                                   Copyright 2017 Investdata Systems|
+//|                                   https://ichimoku-expert.blogspot.com |
 //+------------------------------------------------------------------+
 
 //IchimokuExperimental001.mq5 : Scans for Price Equals SSB on Current Time Frame
@@ -41,7 +41,7 @@ int OnInit()
    string timestamp = string(mqd.year) + "-" + IntegerToString(mqd.mon,2,'0') + "-" + IntegerToString(mqd.day,2,'0')+ " " + IntegerToString(mqd.hour,2,'0') + ":" + IntegerToString(mqd.min,2,'0') + ":" + IntegerToString(mqd.sec,2,'0');
 
    string output = "";
-   output = timestamp + " Starting IchimokuExperimental001.mq5 " + appVersion + " Investdata Systems";
+   output = timestamp + " Starting IchimokuExperimental001.mq5 " + appVersion + " Investdata Systems Tel:+33 7 87 81 74 34";
    output = output + " Version info : " + versionInfo;
    output = output + " https://ichimoku-ea.000webhostapp.com/";
    printf(output);
@@ -66,7 +66,7 @@ int OnInit()
    if(exportPrices)
      {
       //--- Create file to write data in the common folder of the terminal
-      //C:\Users\Idjed\AppData\Roaming\MetaQuotes\Terminal\Common\Files
+      //C:\Users\InvestdataSystems\AppData\Roaming\MetaQuotes\Terminal\Common\Files
       MqlDateTime mqd;
       TimeCurrent(mqd);
       string timestamp = string(mqd.year) + IntegerToString(mqd.mon,2,'0') + IntegerToString(mqd.day,2,'0') + IntegerToString(mqd.hour,2,'0') + IntegerToString(mqd.min,2,'0') + IntegerToString(mqd.sec,2,'0');
